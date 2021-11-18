@@ -13,7 +13,7 @@ import {
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
-import { LocalAuthGuard } from "src/auth/local-auth-guard";
+import { LocalAuthGuard } from "src/auth/local-auth.guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
