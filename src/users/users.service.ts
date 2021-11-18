@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { getRepository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
@@ -55,8 +56,14 @@ export class UsersService {
     }
   }
 
-  async findByUsername(username: string): Promise<User> {
-    return this.usersRepository.findOne({ username });
+  async findToLogin(username: string): Promise<User> {
+    const user = await this.usersRepository
+      .createQueryBuilder()
+      .select("id, username, password")
+      .where({ username })
+      .getRawOne();
+
+    return user;
   }
 
   async update(id: string, data: UpdateUserDto) {

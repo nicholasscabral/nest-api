@@ -8,8 +8,11 @@ import {
   Param,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { LocalAuthGuard } from "src/auth/local-auth-guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
@@ -92,5 +95,11 @@ export class UsersController {
     }
 
     await this.usersService.delete(id);
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post("login")
+  async login(@Request() req) {
+    return req.user;
   }
 }
