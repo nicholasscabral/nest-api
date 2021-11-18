@@ -1,6 +1,15 @@
-import { BadRequestException, Body, Controller, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from "@nestjs/common";
+import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { User } from "./user.entity";
 import { UsersService } from "./users.service";
 
 @ApiTags("users")
@@ -8,8 +17,9 @@ import { UsersService } from "./users.service";
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiCreatedResponse({ type: User })
   @Post()
-  async create(@Body() data: CreateUserDto) {
+  async create(@Body() data: CreateUserDto): Promise<User> {
     const { username, email, password, passwordConfirmation } = data;
 
     if (!username || !email || !password || !passwordConfirmation) {
@@ -27,5 +37,24 @@ export class UsersController {
     }
 
     return response.user;
+  }
+
+  @Get()
+  async index(): Promise<User[]> {
+    const users = await this.usersService.findAll();
+
+    return users;
+  }
+
+  @ApiResponse({ type: User })
+  @Get(":id")
+  async show(@Param("id") id: string) {
+    const user = await this.usersService.find(id);
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return user;
   }
 }

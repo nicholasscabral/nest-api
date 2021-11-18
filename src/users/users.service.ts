@@ -37,4 +37,20 @@ export class UsersService {
       return { err: true, message: err.message };
     }
   }
+
+  async findAll(): Promise<User[]> {
+    try {
+      return this.usersRepository.find();
+    } catch (err) {
+      console.log("UsersService.findAll =>> " + err.message);
+    }
+  }
+
+  async find(id: string): Promise<User> {
+    try {
+      return this.usersRepository.findOne(id);
+    } catch (err) {
+      console.log("UsersService.find =>> " + err.message);
+    }
+  }
 }
