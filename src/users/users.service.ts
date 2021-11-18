@@ -53,4 +53,12 @@ export class UsersService {
       console.log("UsersService.find =>> " + err.message);
     }
   }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await this.usersRepository.delete(id);
+    } catch (err) {
+      console.log("UsersService.delete =>> " + err.message);
+    }
+  }
 }

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -56,5 +57,16 @@ export class UsersController {
     }
 
     return user;
+  }
+
+  @Delete(":id")
+  async destroy(@Param("id") id: string) {
+    const user = await this.usersService.find(id);
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    await this.usersService.delete(id);
   }
 }
