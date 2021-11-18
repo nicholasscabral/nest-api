@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
 import { UsersRepository } from "./users.repository";
 
@@ -52,6 +53,41 @@ export class UsersService {
     } catch (err) {
       console.log("UsersService.find =>> " + err.message);
     }
+  }
+
+  async update(id: string, data: UpdateUserDto) {
+    const user = await this.usersRepository.findOne(id);
+
+    if (data.username && data.username === user.username) {
+      return {
+        err: true,
+        message: `your username is ${data.username} already`,
+      };
+    }
+
+    if (data.email && data.email === user.email) {
+      return { err: true, message: `your email is ${data.email} already` };
+    }
+
+    const usernameInUse = await this.usersRepository.findOne({
+      username: data.username,
+    });
+
+    if (data.username && usernameInUse) {
+      return { err: true, message: "this username is already in use " };
+    }
+
+    const emailInUse = await this.usersRepository.findOne({
+      email: data.email,
+    });
+
+    if (data.email && emailInUse) {
+      return { err: true, message: "this email is already in use " };
+    }
+
+    const updatedUser = await this.usersRepository.update(id, data);
+
+    return { err: false, updatedUser };
   }
 
   async delete(id: string): Promise<void> {

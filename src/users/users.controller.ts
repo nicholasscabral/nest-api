@@ -7,9 +7,11 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
 import { UsersService } from "./users.service";
 
@@ -57,6 +59,28 @@ export class UsersController {
     }
 
     return user;
+  }
+
+  @ApiResponse({ type: User })
+  @Put(":id")
+  async update(@Param("id") id: string, @Body() data: UpdateUserDto) {
+    const { username, email } = data;
+
+    if (!username && !email) {
+      throw new BadRequestException("you must edit at least one field");
+    }
+
+    const user = await this.usersService.find(id);
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    const response = await this.usersService.update(id, data);
+
+    if (response.err) {
+      throw new BadRequestException(response.message);
+    }
   }
 
   @Delete(":id")
