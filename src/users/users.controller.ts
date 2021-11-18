@@ -22,10 +22,10 @@ export class UsersController {
 
     const response = await this.usersService.create(data);
 
-    if (response.error) {
+    if (response.err) {
       throw new BadRequestException(response.message);
     }
 
-    return response;
+    return response.user;
   }
 }
