@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthService } from "src/auth/auth.service";
 import { LocalAuthGuard } from "src/auth/local-auth-guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -21,7 +22,10 @@ import { UsersService } from "./users.service";
 @ApiTags("users")
 @Controller("users")
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService
+  ) {}
 
   @ApiCreatedResponse({ type: User })
   @Post()
@@ -100,6 +104,6 @@ export class UsersController {
   @UseGuards(LocalAuthGuard)
   @Post("login")
   async login(@Request() req) {
-    return req.user;
+    return this.authService.login(req.user);
   }
 }
