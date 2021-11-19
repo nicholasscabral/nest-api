@@ -73,8 +73,17 @@ export class UsersController {
   }
 
   @ApiResponse({ type: User })
+  @UseGuards(JwtAuthGuard)
   @Put(":id")
-  async update(@Param("id") id: string, @Body() data: UpdateUserDto) {
+  async update(
+    @Request() req,
+    @Param("id") id: string,
+    @Body() data: UpdateUserDto
+  ) {
+    if (req.user.id !== id) {
+      throw new ForbiddenException("you can only edit your account");
+    }
+
     const { username, email } = data;
 
     if (!username && !email) {
