@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
   Request,
+  BadRequestException,
 } from "@nestjs/common";
 import { VehiclesService } from "./vehicles.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { Vehicle } from "./vehicle.entity";
 
 @ApiTags("vehicles")
 @Controller("vehicles")
@@ -22,12 +24,25 @@ export class VehiclesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Request() req, @Body() data: CreateVehicleDto) {
+  async create(
+    @Request() req,
+    @Body() data: CreateVehicleDto
+  ): Promise<Vehicle> {
+    const { plate, description, color, model, location } = data;
+
+    if (!plate || !color || !model || !location) {
+      throw new BadRequestException("Fields are missing");
+    }
+
     data.user_id = req.user.id;
 
-    const vehicle = await this.vehiclesService.create(data);
+    const response = await this.vehiclesService.create(data);
 
-    return vehicle;
+    if (response.err) {
+      throw new BadRequestException(response.message);
+    }
+
+    return response.vehicle;
   }
 
   @Get()

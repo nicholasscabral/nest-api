@@ -5,8 +5,8 @@ export class CreateVehicleDto {
   @ApiProperty()
   plate: string;
 
-  @ApiProperty()
-  description: string;
+  @ApiProperty({ required: false })
+  description?: string;
 
   @ApiProperty()
   color: string;

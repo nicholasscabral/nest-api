@@ -21,7 +21,7 @@ export class Vehicle {
   plate: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @ApiProperty()

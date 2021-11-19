@@ -12,14 +12,28 @@ export class VehiclesService {
   ) {}
 
   async create(data: CreateVehicleDto) {
-    const user = await this.usersService.find(data.user_id);
+    try {
+      const plateAlreadyInUse = await this.vehiclesRepository.findOne({
+        plate: data.plate,
+      });
 
-    const vehicle = this.vehiclesRepository.create({ user, ...data });
-    await this.vehiclesRepository.save(vehicle);
+      if (plateAlreadyInUse) {
+        return {
+          err: true,
+          message: "Already exists a vehicle with this plate",
+        };
+      }
 
-    return await this.vehiclesRepository.findOne(vehicle.id, {
-      relations: ["user"],
-    });
+      const user = await this.usersService.find(data.user_id);
+
+      const vehicle = this.vehiclesRepository.create({ user, ...data });
+      const savedVehicle = await this.vehiclesRepository.save(vehicle);
+
+      return { err: false, vehicle: savedVehicle };
+    } catch (err) {
+      console.log("VehiclesService.create =>> " + err.message);
+      return { err: true, message: err.message };
+    }
   }
 
   findAll() {}
