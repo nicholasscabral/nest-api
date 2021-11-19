@@ -1,11 +1,15 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { VehiclesService } from "./vehicles.service";
 import { VehiclesController } from "./vehicles.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { VehiclesRepository } from "./vehicles.repository";
+import { UsersModule } from "src/users/users.module";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VehiclesRepository])],
+  imports: [
+    forwardRef(() => UsersModule),
+    TypeOrmModule.forFeature([VehiclesRepository]),
+  ],
   controllers: [VehiclesController],
   providers: [VehiclesService],
 })
