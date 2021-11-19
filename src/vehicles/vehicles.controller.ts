@@ -66,7 +66,7 @@ export class VehiclesController {
     return vehicle;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Put(":id")
   async update(
     @Request() req,
@@ -81,6 +81,10 @@ export class VehiclesController {
 
     if (!vehicle) {
       throw new NotFoundException("Vehicle not found");
+    }
+
+    if (req.user.id !== vehicle.user.id) {
+      throw new ForbiddenException("you can only edit your own vehicle");
     }
 
     const response = await this.vehiclesService.update(id, data);
