@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   BadRequestException,
+  NotFoundException,
 } from "@nestjs/common";
 import { VehiclesService } from "./vehicles.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
@@ -46,10 +47,22 @@ export class VehiclesController {
   }
 
   @Get()
-  findAll() {}
+  async index(): Promise<Vehicle[]> {
+    const vehicles = await this.vehiclesService.findAll();
+
+    return vehicles;
+  }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {}
+  async show(@Param("id") id: string): Promise<Vehicle> {
+    const vehicle = await this.vehiclesService.find(id);
+
+    if (!vehicle) {
+      throw new NotFoundException("Vehicle not found");
+    }
+
+    return vehicle;
+  }
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {}

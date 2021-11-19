@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
+import { Vehicle } from "./vehicle.entity";
 import { VehiclesRepository } from "./vehicles.repository";
 
 @Injectable()
@@ -36,9 +37,21 @@ export class VehiclesService {
     }
   }
 
-  findAll() {}
+  async findAll(): Promise<Vehicle[]> {
+    try {
+      return await this.vehiclesRepository.find();
+    } catch (err) {
+      console.log("VehiclesService.finAll =>> " + err.message);
+    }
+  }
 
-  findOne(id: number) {}
+  async find(id: string) {
+    try {
+      return await this.vehiclesRepository.findOne(id);
+    } catch (err) {
+      console.log("VehiclesService.find =>> " + err.message);
+    }
+  }
 
   update(id: number, updateVehicleDto: UpdateVehicleDto) {}
 

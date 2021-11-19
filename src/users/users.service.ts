@@ -42,7 +42,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     try {
-      return this.usersRepository.find();
+      return await this.usersRepository.find();
     } catch (err) {
       console.log("UsersService.findAll =>> " + err.message);
     }
@@ -50,7 +50,7 @@ export class UsersService {
 
   async find(id: string): Promise<User> {
     try {
-      return this.usersRepository.findOne(id);
+      return await this.usersRepository.findOne(id);
     } catch (err) {
       console.log("UsersService.find =>> " + err.message);
     }
