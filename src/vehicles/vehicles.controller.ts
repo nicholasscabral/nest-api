@@ -11,6 +11,7 @@ import {
   BadRequestException,
   NotFoundException,
   ForbiddenException,
+  Put,
 } from "@nestjs/common";
 import { VehiclesService } from "./vehicles.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
@@ -65,8 +66,29 @@ export class VehiclesController {
     return vehicle;
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateVehicleDto: UpdateVehicleDto) {}
+  // @UseGuards(JwtAuthGuard)
+  @Put(":id")
+  async update(
+    @Request() req,
+    @Param("id") id: string,
+    @Body() data: UpdateVehicleDto
+  ) {
+    if (Object.keys(data).length === 0) {
+      throw new BadRequestException("you must edit ate least one field");
+    }
+
+    const vehicle = await this.vehiclesService.find(id);
+
+    if (!vehicle) {
+      throw new NotFoundException("Vehicle not found");
+    }
+
+    const response = await this.vehiclesService.update(id, data);
+
+    if (response.err) {
+      throw new BadRequestException(response.message);
+    }
+  }
 
   @UseGuards(JwtAuthGuard)
   @Delete(":id")

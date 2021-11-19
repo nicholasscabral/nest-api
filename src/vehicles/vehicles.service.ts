@@ -53,7 +53,28 @@ export class VehiclesService {
     }
   }
 
-  update(id: number, updateVehicleDto: UpdateVehicleDto) {}
+  async update(id: string, data: UpdateVehicleDto) {
+    const vehicle = await this.vehiclesRepository.findOne(id);
+
+    if (data.plate && data.plate === vehicle.plate) {
+      return {
+        err: true,
+        message: `this vehicle plate is ${data.plate} already`,
+      };
+    }
+
+    const plateInUse = await this.vehiclesRepository.findOne({
+      plate: data.plate,
+    });
+
+    if (data.plate && plateInUse) {
+      return { err: true, message: "this plate is already in use" };
+    }
+
+    const updatedVehicle = await this.vehiclesRepository.update(id, data);
+
+    return { err: false, updatedVehicle };
+  }
 
   async delete(id: string) {
     try {
