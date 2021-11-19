@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -13,7 +14,9 @@ import {
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "src/auth/auth.service";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { LocalAuthGuard } from "src/auth/local-auth.guard";
+import { Vehicle } from "src/vehicles/vehicle.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
@@ -49,6 +52,7 @@ export class UsersController {
     return response.user;
   }
 
+  @ApiResponse({ isArray: true, type: User })
   @Get()
   async index(): Promise<User[]> {
     const users = await this.usersService.findAll();
@@ -105,5 +109,18 @@ export class UsersController {
   @Post("login")
   async login(@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @ApiResponse({ isArray: true, type: Vehicle })
+  @UseGuards(JwtAuthGuard)
+  @Get(":id/vehicles")
+  async vehicles(@Request() req, @Param("id") id: string): Promise<Vehicle[]> {
+    if (req.user.id !== id) {
+      throw new ForbiddenException("you can only list your vehicles");
+    }
+
+    const vehicles = await this.usersService.findVehicles(id);
+
+    return vehicles;
   }
 }

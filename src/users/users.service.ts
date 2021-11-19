@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { getRepository } from "typeorm";
+import { Vehicle } from "src/vehicles/vehicle.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
@@ -64,6 +64,14 @@ export class UsersService {
       .getRawOne();
 
     return user;
+  }
+
+  async findVehicles(authId: string): Promise<Vehicle[]> {
+    const user = await this.usersRepository.findOne(authId, {
+      relations: ["vehicles"],
+    });
+
+    return user.vehicles;
   }
 
   async update(id: string, data: UpdateUserDto) {
