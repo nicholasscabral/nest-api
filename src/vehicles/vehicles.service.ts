@@ -1,9 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
+import { VehiclesRepository } from "./vehicles.repository";
 
 @Injectable()
 export class VehiclesService {
+  constructor(private vehiclesRepository: VehiclesRepository) {}
+
   create(createVehicleDto: CreateVehicleDto) {}
 
   findAll() {}
