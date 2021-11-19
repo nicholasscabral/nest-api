@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Vehicle } from "src/vehicles/vehicle.entity";
+import { Vehicle } from "../vehicles/vehicle.entity";
 import {
   Column,
   CreateDateColumn,

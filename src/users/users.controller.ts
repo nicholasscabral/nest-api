@@ -13,10 +13,10 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiCreatedResponse, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AuthService } from "src/auth/auth.service";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { LocalAuthGuard } from "src/auth/local-auth.guard";
-import { Vehicle } from "src/vehicles/vehicle.entity";
+import { AuthService } from "../auth/auth.service";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { LocalAuthGuard } from "../auth/local-auth.guard";
+import { Vehicle } from "../vehicles/vehicle.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User } from "./user.entity";
