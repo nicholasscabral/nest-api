@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { User } from "src/users/user.entity";
 import { UsersService } from "src/users/users.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
@@ -82,5 +83,13 @@ export class VehiclesService {
     } catch (err) {
       console.log("VehiclesService.delete =>> " + err.message);
     }
+  }
+
+  async owner(id: string): Promise<User> {
+    const vehicle = await this.vehiclesRepository.findOne(id, {
+      relations: ["user"],
+    });
+
+    return vehicle.user;
   }
 }

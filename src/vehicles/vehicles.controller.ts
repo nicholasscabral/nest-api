@@ -16,9 +16,10 @@ import {
 import { VehiclesService } from "./vehicles.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags, ApiResponse } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 import { Vehicle } from "./vehicle.entity";
+import { User } from "src/users/user.entity";
 
 @ApiTags("vehicles")
 @Controller("vehicles")
@@ -48,6 +49,7 @@ export class VehiclesController {
     return response.vehicle;
   }
 
+  @ApiResponse({ isArray: true, type: Vehicle })
   @Get()
   async index(): Promise<Vehicle[]> {
     const vehicles = await this.vehiclesService.findAll();
@@ -55,6 +57,7 @@ export class VehiclesController {
     return vehicles;
   }
 
+  @ApiResponse({ type: Vehicle })
   @Get(":id")
   async show(@Param("id") id: string): Promise<Vehicle> {
     const vehicle = await this.vehiclesService.find(id);
@@ -110,5 +113,13 @@ export class VehiclesController {
     }
 
     await this.vehiclesService.delete(id);
+  }
+
+  @ApiResponse({ type: User })
+  @Get(":id/owner")
+  async owner(@Param("id") id: string): Promise<User> {
+    const owner = await this.vehiclesService.owner(id);
+
+    return owner;
   }
 }
