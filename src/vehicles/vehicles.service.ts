@@ -47,7 +47,7 @@ export class VehiclesService {
 
   async find(id: string) {
     try {
-      return await this.vehiclesRepository.findOne(id);
+      return await this.vehiclesRepository.findOne(id, { relations: ["user"] });
     } catch (err) {
       console.log("VehiclesService.find =>> " + err.message);
     }
@@ -55,5 +55,11 @@ export class VehiclesService {
 
   update(id: number, updateVehicleDto: UpdateVehicleDto) {}
 
-  remove(id: number) {}
+  async delete(id: string) {
+    try {
+      await this.vehiclesRepository.delete(id);
+    } catch (err) {
+      console.log("VehiclesService.delete =>> " + err.message);
+    }
+  }
 }
