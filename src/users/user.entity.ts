@@ -27,7 +27,7 @@ export class User {
   password: string;
 
   @ApiProperty()
-  @CreateDateColumn({ default: () => "now()" })
+  @CreateDateColumn({ default: () => "now()", select: false })
   created_at: Date;
 
   @UpdateDateColumn({ select: false })
@@ -35,4 +35,10 @@ export class User {
 
   @OneToMany((type) => Vehicle, (vehicle) => vehicle.user)
   vehicles: Vehicle[];
+
+  constructor(user?: Partial<User>) {
+    this.id = user?.id;
+    this.username = user?.username;
+    this.email = user?.email;
+  }
 }
