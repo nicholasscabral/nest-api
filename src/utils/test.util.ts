@@ -1,3 +1,4 @@
+import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { User } from "../users/user.entity";
 
 export class TestUtil {
@@ -28,5 +29,13 @@ export class TestUtil {
     });
 
     return [user1, user2, user3];
+  }
+
+  static validDto(): CreateUserDto {
+    return {
+      username: "test",
+      email: "test@example.com",
+      password: "testpassword",
+    };
   }
 }

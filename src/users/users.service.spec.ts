@@ -8,8 +8,8 @@ import { UsersService } from "./users.service";
 const mockRepository = {
   createQueryBuilder: jest.fn(),
   verifyCredentials: jest.fn(),
-  create: jest.fn(),
-  save: jest.fn(),
+  create: jest.fn().mockReturnValue(TestUtil.validUser()),
+  save: jest.fn().mockResolvedValue(TestUtil.validUser()),
   find: jest.fn().mockResolvedValue(TestUtil.userList()),
   findOneOrFail: jest.fn().mockResolvedValue(TestUtil.userList()[0]),
   update: jest.fn(),
@@ -71,6 +71,23 @@ describe("UserService", () => {
         .mockRejectedValueOnce(new Error());
 
       expect(service.findOne).rejects.toThrowError(NotFoundException);
+    });
+  });
+
+  describe("create", () => {
+    it("should be able to create a new user", async () => {
+      const result = await service.create(TestUtil.validDto());
+
+      expect(result.user).toEqual(TestUtil.validUser());
+      expect(repository.verifyCredentials).toBeCalledTimes(1);
+      expect(repository.create).toBeCalledTimes(1);
+      expect(repository.save).toBeCalledTimes(1);
+    });
+
+    it("should be able to throw an exception", () => {
+      jest.spyOn(repository, "save").mockRejectedValueOnce(new Error());
+
+      expect(service.create(TestUtil.validDto())).rejects.toThrowError();
     });
   });
 });

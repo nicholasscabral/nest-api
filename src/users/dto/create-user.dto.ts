@@ -11,5 +11,5 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty()
-  passwordConfirmation: string;
+  passwordConfirmation?: string;
 }

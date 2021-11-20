@@ -26,7 +26,7 @@ export class VehiclesService {
         };
       }
 
-      const user = await this.usersService.find(data.user_id);
+      const user = await this.usersService.findOne(data.user_id);
 
       const vehicle = this.vehiclesRepository.create({ user, ...data });
       const savedVehicle = await this.vehiclesRepository.save(vehicle);
