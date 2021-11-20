@@ -83,10 +83,14 @@ export class VehiclesService {
   }
 
   async owner(id: string): Promise<User> {
-    const vehicle = await this.vehiclesRepository.findOne(id, {
-      relations: ["user"],
-    });
+    try {
+      const vehicle = await this.vehiclesRepository.findOneOrFail(id, {
+        relations: ["user"],
+      });
 
-    return vehicle.user;
+      return vehicle.user;
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
   }
 }
