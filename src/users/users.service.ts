@@ -104,16 +104,15 @@ export class UsersService {
       return { err: true, message: "this email is already in use " };
     }
 
-    const updatedUser = await this.usersRepository.update(id, data);
+    await this.usersRepository.update(id, data);
+
+    const updatedUser = await this.usersRepository.findOne(id);
 
     return { err: false, updatedUser };
   }
 
   async delete(id: string): Promise<void> {
-    try {
-      await this.usersRepository.delete(id);
-    } catch (err) {
-      console.log("UsersService.delete =>> " + err.message);
-    }
+    await this.usersRepository.findOneOrFail(id);
+    await this.usersRepository.delete(id);
   }
 }

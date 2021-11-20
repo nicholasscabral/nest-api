@@ -12,8 +12,9 @@ const mockRepository = {
   save: jest.fn().mockResolvedValue(TestUtil.validUser()),
   find: jest.fn().mockResolvedValue(TestUtil.userList()),
   findOneOrFail: jest.fn().mockResolvedValue(TestUtil.userList()[0]),
+  findOne: jest.fn(),
   update: jest.fn(),
-  delete: jest.fn(),
+  delete: jest.fn().mockReturnValue(undefined),
 };
 
 describe("UserService", () => {
@@ -70,13 +71,13 @@ describe("UserService", () => {
         .spyOn(repository, "findOneOrFail")
         .mockRejectedValueOnce(new Error());
 
-      expect(service.findOne).rejects.toThrowError(NotFoundException);
+      expect(service.findOne("1")).rejects.toThrowError(NotFoundException);
     });
   });
 
   describe("create", () => {
     it("should be able to create a new user", async () => {
-      const result = await service.create(TestUtil.validDto());
+      const result = await service.create(TestUtil.validCreateUserDto());
 
       expect(result.user).toEqual(TestUtil.validUser());
       expect(repository.verifyCredentials).toBeCalledTimes(1);
@@ -87,7 +88,19 @@ describe("UserService", () => {
     it("should be able to throw an exception", () => {
       jest.spyOn(repository, "save").mockRejectedValueOnce(new Error());
 
-      expect(service.create(TestUtil.validDto())).rejects.toThrowError();
+      expect(
+        service.create(TestUtil.validCreateUserDto())
+      ).rejects.toThrowError();
+    });
+  });
+
+  describe("delete", () => {
+    it("should be able to delete a user", async () => {
+      const result = await service.delete("1");
+
+      expect(result).toBeUndefined();
+      expect(repository.findOneOrFail).toBeCalledTimes(3);
+      expect(repository.delete).toBeCalledTimes(1);
     });
   });
 });

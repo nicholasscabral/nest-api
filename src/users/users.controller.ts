@@ -101,6 +101,8 @@ export class UsersController {
     if (response.err) {
       throw new BadRequestException(response.message);
     }
+
+    return response.updatedUser;
   }
 
   @Delete(":id")

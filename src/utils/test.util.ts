@@ -31,11 +31,15 @@ export class TestUtil {
     return [user1, user2, user3];
   }
 
-  static validDto(): CreateUserDto {
+  static validCreateUserDto(): CreateUserDto {
     return {
       username: "test",
       email: "test@example.com",
       password: "testpassword",
     };
+  }
+
+  static validUpdateUserDto(): Object {
+    return { username: "test", email: "test@example.com" };
   }
 }
