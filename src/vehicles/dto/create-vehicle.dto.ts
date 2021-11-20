@@ -15,8 +15,5 @@ export class CreateVehicleDto {
   model: string;
 
   @ApiProperty()
-  location: string;
-
-  @ApiProperty()
   user_id: string;
 }

@@ -32,7 +32,7 @@ export class VehiclesController {
     @Request() req,
     @Body() data: CreateVehicleDto
   ): Promise<Vehicle> {
-    const { plate, description, color, model, location } = data;
+    const { plate, description, color, model } = data;
 
     if (!plate || !color || !model || !location) {
       throw new BadRequestException("Fields are missing");

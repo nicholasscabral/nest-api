@@ -33,10 +33,6 @@ export class Vehicle {
   model: string;
 
   @ApiProperty()
-  @Column()
-  location: string;
-
-  @ApiProperty()
   @CreateDateColumn({ default: () => "now()" })
   created_at: Date;
 
