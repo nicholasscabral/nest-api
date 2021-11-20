@@ -63,7 +63,7 @@ export class UsersController {
   @ApiResponse({ type: User })
   @Get(":id")
   async show(@Param("id") id: string) {
-    const user = await this.usersService.find(id);
+    const user = await this.usersService.findOne(id);
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -90,7 +90,7 @@ export class UsersController {
       throw new BadRequestException("you must edit at least one field");
     }
 
-    const user = await this.usersService.find(id);
+    const user = await this.usersService.findOne(id);
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -105,7 +105,7 @@ export class UsersController {
 
   @Delete(":id")
   async destroy(@Param("id") id: string) {
-    const user = await this.usersService.find(id);
+    const user = await this.usersService.findOne(id);
 
     if (!user) {
       throw new NotFoundException("User not found");

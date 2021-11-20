@@ -1,4 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { Vehicle } from "src/vehicles/vehicle.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -36,23 +40,19 @@ export class UsersService {
       return { err: false, user: savedUser };
     } catch (err) {
       console.log("UsersService.create =>> " + err.message);
-      return { err: true, message: err.message };
+      throw new InternalServerErrorException(err.message);
     }
   }
 
   async findAll(): Promise<User[]> {
-    try {
-      return await this.usersRepository.find();
-    } catch (err) {
-      console.log("UsersService.findAll =>> " + err.message);
-    }
+    return await this.usersRepository.find();
   }
 
-  async find(id: string): Promise<User> {
+  async findOne(id: string): Promise<User> {
     try {
-      return await this.usersRepository.findOne(id);
+      return await this.usersRepository.findOneOrFail(id);
     } catch (err) {
-      console.log("UsersService.find =>> " + err.message);
+      throw new NotFoundException(err.message);
     }
   }
 
