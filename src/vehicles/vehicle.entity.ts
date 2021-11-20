@@ -47,4 +47,12 @@ export class Vehicle {
   @ManyToOne((type) => User, (user) => user.vehicles, { onDelete: "CASCADE" })
   @JoinColumn([{ name: "user_id", referencedColumnName: "id" }])
   user: User;
+
+  constructor(vehicle?: Partial<Vehicle>) {
+    this.id = vehicle?.id;
+    this.plate = vehicle?.plate;
+    this.description = vehicle?.description;
+    this.color = vehicle?.color;
+    this.model = vehicle?.model;
+  }
 }
