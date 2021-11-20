@@ -60,7 +60,7 @@ export class VehiclesController {
   @ApiResponse({ type: Vehicle })
   @Get(":id")
   async show(@Param("id") id: string): Promise<Vehicle> {
-    const vehicle = await this.vehiclesService.find(id);
+    const vehicle = await this.vehiclesService.findOne(id);
 
     if (!vehicle) {
       throw new NotFoundException("Vehicle not found");
@@ -80,7 +80,7 @@ export class VehiclesController {
       throw new BadRequestException("you must edit ate least one field");
     }
 
-    const vehicle = await this.vehiclesService.find(id);
+    const vehicle = await this.vehiclesService.findOne(id);
 
     if (!vehicle) {
       throw new NotFoundException("Vehicle not found");
@@ -100,7 +100,7 @@ export class VehiclesController {
   @UseGuards(JwtAuthGuard)
   @Delete(":id")
   async destroy(@Request() req, @Param("id") id: string) {
-    const vehicle = await this.vehiclesService.find(id);
+    const vehicle = await this.vehiclesService.findOne(id);
 
     if (!vehicle) {
       throw new NotFoundException("Vehicle not found");

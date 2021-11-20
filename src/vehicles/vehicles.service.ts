@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "src/users/user.entity";
-import { UsersService } from "src/users/users.service";
+import { User } from "../users/user.entity";
+import { UsersService } from "../users/users.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
 import { UpdateVehicleDto } from "./dto/update-vehicle.dto";
 import { Vehicle } from "./vehicle.entity";
@@ -39,14 +39,10 @@ export class VehiclesService {
   }
 
   async findAll(): Promise<Vehicle[]> {
-    try {
-      return await this.vehiclesRepository.find();
-    } catch (err) {
-      console.log("VehiclesService.finAll =>> " + err.message);
-    }
+    return await this.vehiclesRepository.find();
   }
 
-  async find(id: string) {
+  async findOne(id: string) {
     try {
       return await this.vehiclesRepository.findOne(id, { relations: ["user"] });
     } catch (err) {
