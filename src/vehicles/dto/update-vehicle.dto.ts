@@ -9,7 +9,4 @@ export class UpdateVehicleDto extends Object {
 
   @ApiProperty({ required: false })
   color?: string;
-
-  @ApiProperty({ required: false })
-  location?: string;
 }

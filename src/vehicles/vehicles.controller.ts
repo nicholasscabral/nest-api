@@ -34,7 +34,7 @@ export class VehiclesController {
   ): Promise<Vehicle> {
     const { plate, description, color, model } = data;
 
-    if (!plate || !color || !model || !location) {
+    if (!plate || !color || !model || !description) {
       throw new BadRequestException("Fields are missing");
     }
 
