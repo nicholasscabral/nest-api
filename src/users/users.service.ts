@@ -112,7 +112,11 @@ export class UsersService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.usersRepository.findOneOrFail(id);
-    await this.usersRepository.delete(id);
+    try {
+      await this.usersRepository.findOneOrFail(id);
+      await this.usersRepository.delete(id);
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
   }
 }

@@ -102,5 +102,19 @@ describe("UserService", () => {
       expect(repository.findOneOrFail).toBeCalledTimes(3);
       expect(repository.delete).toBeCalledTimes(1);
     });
+
+    it("should be able to throw a not found exception", async () => {
+      jest
+        .spyOn(repository, "findOneOrFail")
+        .mockRejectedValueOnce(new Error());
+
+      expect(service.delete("1")).rejects.toThrowError(NotFoundException);
+    });
+
+    it("should be able to throw a exception", async () => {
+      jest.spyOn(repository, "delete").mockRejectedValueOnce(new Error());
+
+      expect(service.delete("1")).rejects.toThrowError();
+    });
   });
 });
