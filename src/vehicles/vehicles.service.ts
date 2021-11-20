@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { User } from "../users/user.entity";
 import { UsersService } from "../users/users.service";
 import { CreateVehicleDto } from "./dto/create-vehicle.dto";
@@ -42,11 +42,11 @@ export class VehiclesService {
     return await this.vehiclesRepository.find();
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Vehicle> {
     try {
-      return await this.vehiclesRepository.findOne(id, { relations: ["user"] });
+      return await this.vehiclesRepository.findOneOrFail(id);
     } catch (err) {
-      console.log("VehiclesService.find =>> " + err.message);
+      throw new NotFoundException(err.message);
     }
   }
 
@@ -75,9 +75,10 @@ export class VehiclesService {
 
   async delete(id: string) {
     try {
+      await this.vehiclesRepository.findOneOrFail(id);
       await this.vehiclesRepository.delete(id);
     } catch (err) {
-      console.log("VehiclesService.delete =>> " + err.message);
+      throw new NotFoundException(err.message);
     }
   }
 

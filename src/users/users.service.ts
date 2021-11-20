@@ -66,12 +66,16 @@ export class UsersService {
     return user;
   }
 
-  async findVehicles(authId: string): Promise<Vehicle[]> {
-    const user = await this.usersRepository.findOne(authId, {
-      relations: ["vehicles"],
-    });
+  async findVehicles(id: string): Promise<Vehicle[]> {
+    try {
+      const user = await this.usersRepository.findOneOrFail(id, {
+        relations: ["vehicles"],
+      });
 
-    return user.vehicles;
+      return user.vehicles;
+    } catch (err) {
+      throw new NotFoundException(err.message);
+    }
   }
 
   async update(id: string, data: UpdateUserDto) {
